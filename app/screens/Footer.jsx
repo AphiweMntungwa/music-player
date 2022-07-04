@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   TouchableOpacity,
   StyleSheet,
@@ -9,17 +9,45 @@ import {
 import { AntDesign, Entypo } from "@expo/vector-icons";
 
 function Footer({ navigation }) {
+  const [iconNames, setIconNames] = useState([]);
+
+  function getIcon() {
+    setIconNames([
+      { icon: <Entypo name="folder-music" size={24} color="black" /> },
+      {
+        icon: (
+          <AntDesign
+            name="addfolder"
+            size={24}
+            color="black"
+            onPress={() => navigation.navigate("Songs")}
+          />
+        ),
+      },
+      { icon: <AntDesign name="folderopen" size={24} color="black" /> },
+      { icon: <AntDesign name="search1" size={24} color="black" /> },
+    ]);
+  }
+
+  useEffect(() => {
+    getIcon();
+  }, []);
+
+  console.log(iconNames);
+
+  function List({ hoc }) {
+    return <View style={styles.iconView}>{hoc}</View>;
+  }
+
   return (
     <View style={styles.icons}>
-      <Entypo name="folder-music" size={24} color="black" />
-      <AntDesign
-        name="addfolder"
-        size={24}
-        color="black"
-        onPress={() => navigation.navigate("Songs")}
+      <FlatList
+        contentContainerStyle={{ flex: 1, justifyContent:'space-evenly' }}
+        data={iconNames}
+        horizontal
+        renderItem={({ item }) => <List hoc={item.icon} />}
+        keyExtractor={(item) => item.icon.props.name}
       />
-      <AntDesign name="folderopen" size={24} color="black" />
-      <AntDesign name="search1" size={24} color="black" />
     </View>
   );
 }
@@ -27,11 +55,11 @@ function Footer({ navigation }) {
 const styles = StyleSheet.create({
   icons: {
     paddingVertical: 5,
-    flexDirection: "row",
-    // marginTop: "100%",
-    justifyContent: "space-evenly",
+    borderTopColor: "green",
+    borderTopWidth: 1,
+    borderStyle: "dotted",
   },
-  list: {},
+  iconView: {},
 });
 
 export default Footer;
